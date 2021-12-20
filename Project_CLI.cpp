@@ -56,7 +56,7 @@ int main(const int argc, const char *argv[])
     {
         string input;
         cout << " Type a valid sql command, or type 'exit' to quit: " <<endl;
-        cin >> input;
+        getline (cin, input);
         if (input == "exit") {
             exit = true;
             cout << "Exiting..." << endl;
