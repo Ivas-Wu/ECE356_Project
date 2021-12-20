@@ -54,10 +54,10 @@ int main(const int argc, const char *argv[])
     // lack of options.
     while (!exit)
     {
-        string *input;
+        string input;
         cout << " Type a valid sql command, or type 'exit' to quit: " <<endl;
         cin >> input;
-        if (input.strcasecmp("exit")) {
+        if (input == "exit") {
             exit = true;
             cout << "Exiting..." << endl;
             break;
