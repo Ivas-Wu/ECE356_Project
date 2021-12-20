@@ -80,7 +80,6 @@ int main(const int argc, const char *argv[])
         {
             cerr << ": mysql_query() error: " << mysql_error(pMysql) << endl
                  << "rc: " << rc << endl;
-            return -1;
         }
 
         // Fetch the results
@@ -97,7 +96,6 @@ int main(const int argc, const char *argv[])
             {
                 cerr << argv[0] << ": Error: Query \"" << QUERY << "\" failed to return expected data" << endl
                      << argv[0] << ": error information: " << mysql_error(pMysql) << endl;
-                return -1;
             }
         }
         else
