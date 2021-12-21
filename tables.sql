@@ -1,6 +1,7 @@
 CREATE TABLE State (
     stateID decimal(2,0),
-    stateName varchar (25)
+    stateName varchar (25),
+    PRIMARY KEY (stateID)
 );
 
 INSERT INTO State
@@ -36,8 +37,8 @@ VALUES
     (32, 'Nevada'),
     (33, 'New Hampshire'),
     (34, 'New Jersey'),
-    (35, 'New Mexixco')
-    (36, 'New York'),,
+    (35, 'New Mexixco'),
+    (36, 'New York'),
     (37, 'North Carolina'),
     (38, 'North Dakota'),
     (39, 'Ohio'),
@@ -154,7 +155,7 @@ VALUES
     (4, 'Paraplegic or restricted to wheelchair'),
     (5, 'Impaired due to previous injury'),
     (6, 'Deaf'),
-    (7, 'blind'),
+    (7, 'Blind'),
     (8, 'Emotional (depressed, angry, disturbed, etc.)'),
     (9, 'Under the influence of alcohol, drugs or medication'),
     (10, 'Physical impairment - no details'),
@@ -184,8 +185,10 @@ CREATE TABLE Date (
     day decimal (2,0),
     dayWeek varchar(10),
     month varchar (10),
+    year decimal (4,0),
     hour decimal(2,0),
-    minute decimal (2,0)
+    minute decimal (2,0),
+    PRIMARY KEY (dateID)
 );
 
 CREATE TABLE Location (
@@ -200,7 +203,7 @@ CREATE TABLE Location (
 
 CREATE TABLE Accident (
     state decimal(2,0) NOT NULL,
-    case decimal(4,0) NOT NULL,
+    caseNum decimal(4,0) NOT NULL,
     veForms decimal(2,0),
     dateID int,
     peds decimal(2,0),
@@ -211,44 +214,46 @@ CREATE TABLE Accident (
     weather varchar(75),
     drunkDrivers decimal (2,0),
     fatalities decimal (2,0),
-    CONSTRAINT PK_Accident PRIMARY KEY (state, case),
+    CONSTRAINT PK_Accident PRIMARY KEY (state, caseNum),
     FOREIGN KEY (dateID) REFERENCES Date(dateID),
     FOREIGN KEY (locationID) REFERENCES Location(locationID),
     FOREIGN KEY (state) REFERENCES State(stateID)
 );
 
 CREATE TABLE Vehicle (
-    stateCase decimal(6,0) NOT NULL,
+    state decimal(2,0) NOT NULL,
+    caseNum decimal(4,0) NOT NULL,
     vehicleNumber decimal(2,0) NOT NULL,
     numOccs decimal(2,0),
     collisionManner decimal(2,0),
     hitAndRun decimal (1,0),
     registeredState decimal(2,0),
     owner decimal(1,0),
-    make varchart(45),
+    make varchar(45),
     model varchar(45),
     modelYear decimal(4,0),
     deaths decimal(2,0),
     rollover decimal(1,0),
     driverDrunk decimal(1,0),
     speedLimit decimal (3,0),
-    CONSTRAINT PK_Vehicle PRIMARY KEY (stateCase, vehicleNumber),
-    FOREIGN KEY (stateCase) REFERENCES Accident(state, case),
+    PRIMARY KEY (state, caseNum, vehicleNumber),
+    FOREIGN KEY (state, caseNum) REFERENCES Accident(state, caseNum),
     FOREIGN KEY (owner) REFERENCES Owner(ownerID),
     FOREIGN KEY (registeredState) REFERENCES State(stateID),
     FOREIGN KEY (collisionManner) REFERENCES CollisionManner(collisionMannerID)
 );
 
 CREATE TABLE NonMotorist (
-    stateCase decimal(6,0) NOT NULL,
+    state decimal(2,0) NOT NULL,
+    caseNum decimal(4,0) NOT NULL,
     personNumber decimal(2,0) NOT NULL,
     passerbyType decimal(2,0),
     age decimal(3,0),
-    sex decimal(1,0),
+    sex char,
     nonMotoristAction decimal(2,0),
     nonMotoristImpairment decimal(2,0),
-    CONSTRAINT PK_NonMotorist PRIMARY KEY (stateCase, personNumber),
-    FOREIGN KEY (stateCase) REFERENCES Accident(state, case),
+    CONSTRAINT PK_NonMotorist PRIMARY KEY (state, caseNum, personNumber),
+    FOREIGN KEY (state, caseNum) REFERENCES Accident(state, caseNum),
     FOREIGN KEY (passerbyType) REFERENCES PasserbyType(passerbyTypeID),
     FOREIGN KEY (nonMotoristAction) REFERENCES NonMotoristAction(nonMotoristActionID),
     FOREIGN KEY (nonMotoristImpairment) REFERENCES NonMotoristImpairment(nonMotoristImpairmentID)
