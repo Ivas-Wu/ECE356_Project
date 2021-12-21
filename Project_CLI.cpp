@@ -185,11 +185,11 @@ string make_query(int count)
     string return_value = "";
     if (count == 1)
     {
-        return_value = "SELECT (ST_CASE, State, Year) from accident INNER JOIN LOCATION USING(ST_CASE) INNER JOIN DATE USING(ST_CASE) ";
+        return_value = "SELECT (state, case, year) from Accident INNER JOIN DATE USING(state, case) ";
     }
     else if (count == 2)
     {
-        return_value = "SELECT COUNT(DISTINCT ST_CASE) from accident INNER JOIN LOCATION USING(ST_CASE) INNER JOIN DATE USING(ST_CASE) ";
+        return_value = "SELECT COUNT(DISTINCT state, case) from Accident ";
     }
     else
     {
@@ -206,7 +206,7 @@ string make_query(int count)
         if (input == "help")
         {
             cout << "-1 : exit" << endl << "1 : case, state" << endl << "2 : Date" << endl;
-            cout << "3 : Location" << endl << "4 : Person Count" << endl << "5 : Injury Type" << endl;
+            cout << "3 : Location" << endl << "4 : Person Count" << endl << "5 : Speed Limit" << endl;
             cout << "6 : Drunk Driver" << endl << "7 : Roll Over" << endl << "8 : Hit and Run" << endl;
             cout << "9 : Weather" << endl << "10 : Death Count" << endl;
         }
@@ -221,13 +221,18 @@ string make_query(int count)
     }
     else if (input == 1) // Case, State
     {
-        cout << "Enter a state and case number: " << endl;
+        cout << "Enter a case number: " << endl;
         getline(cin, hold);
-        return_value.append("WHERE ST_CASE = ");
+        return_value.append("WHERE case = ");
+        return_value.append(hold);
+        cout << "Enter a state number: " << endl;
+        getline(cin, hold);
+        return_value.append("AND WHERE state = ");
         return_value.append(hold);
     }
     else if (input == 2) // Date
     {
+        return_value.append("INNER JOIN Date USING(state, case) ";
         loop = true;
         while (loop)
         {
@@ -242,13 +247,13 @@ string make_query(int count)
             }
         }
         if (hold == "G") {
-            return_value.append("WHERE Year > ");
+            return_value.append("WHERE year > ");
         }
         else if (hold == "L") {
-            return_value.append("WHERE Year < ");
+            return_value.append("WHERE year < ");
         }
         else if (hold == "E") {
-            return_value.append("WHERE Year = ");
+            return_value.append("WHERE year = ");
         }
         if (hold != "exit") {
             cout << "Enter a year: " << endl;
@@ -260,7 +265,7 @@ string make_query(int count)
     {
         cout << "Enter a state: " << endl;
         getline(cin, hold);
-        return_value.append("WHERE State = ");
+        return_value.append("WHERE state = ");
         return_value.append(hold);
     }
     else if (input == 4) // Persons count
@@ -279,13 +284,13 @@ string make_query(int count)
             }
         }
         if (hold == "G") {
-            return_value.append("WHERE Person_count > ");
+            return_value.append("WHERE persons > ");
         }
         else if (hold == "L") {
-            return_value.append("WHERE Person_count < ");
+            return_value.append("WHERE persons < ");
         }
         else if (hold == "E") {
-            return_value.append("WHERE Person_count = ");
+            return_value.append("WHERE persons = ");
         }
         if (hold != "exit") {
             cout << "Enter a value for the person count: " << endl;
@@ -293,9 +298,36 @@ string make_query(int count)
             return_value.append(hold);
         }
     }
-    else if (input == 5) // Injury Type
+    else if (input == 5) // Speed Limit
     {
-        //TODO
+        return_value.append("INNER JOIN Vehicle USING(state, case) ";
+        loop = true;
+        while (loop)
+        {
+            cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
+            getline(cin, hold);
+            if (hold == "G" || hold == "L" || hold == "E" ){
+                loop = false;
+            }
+            if (hold == "exit") {
+                loop = false;
+                return_value = hold;
+            }
+        }
+        if (hold == "G") {
+            return_value.append("WHERE speedLimit > ");
+        }
+        else if (hold == "L") {
+            return_value.append("WHERE speedLimit < ");
+        }
+        else if (hold == "E") {
+            return_value.append("WHERE speedLimit = ");
+        }
+        if (hold != "exit") {
+            cout << "Enter a speed limit: " << endl;
+            getline(cin, hold);
+            return_value.append(hold);
+        }
     }
     else if (input == 6) // Drunk Driver
     {
@@ -313,13 +345,13 @@ string make_query(int count)
             }
         }
         if (hold == "G") {
-            return_value.append("WHERE DRUNK_DR > ");
+            return_value.append("WHERE drunkDrivers > ");
         }
         else if (hold == "L") {
-            return_value.append("WHERE DRUNK_DR < ");
+            return_value.append("WHERE drunkDrivers < ");
         }
         else if (hold == "E") {
-            return_value.append("WHERE DRUNK_DR = ");
+            return_value.append("WHERE drunkDrivers = ");
         }
         if (hold != "exit") {
             cout << "Enter a value for the drunk driver count: " << endl;
@@ -329,7 +361,7 @@ string make_query(int count)
     }
     else if (input == 7) // Roll Over
     {
-        return_value.append("INNER JOIN vehicle USING(ST_CASE) WHERE Rollover = ";
+        return_value.append("INNER JOIN Vehicle USING(state, case) WHERE rollover = ";
         cout << "Rollover (y/n): " << endl;
         getline(cin, hold);
         if (hold == "y") {
@@ -341,7 +373,7 @@ string make_query(int count)
     }
     else if (input == 8) // Hit and Run
     {
-        return_value.append("INNER JOIN vehicle USING(ST_CASE) WHERE HIT_RUN = ";
+        return_value.append("INNER JOIN Vehicle USING(state, case) WHERE hitAndRun = ";
         cout << "Hit and run (y/n): " << endl;
         getline(cin, hold);
         if (hold == "y") {
@@ -353,7 +385,10 @@ string make_query(int count)
     }
     else if (input == 9) // Weather
     {
-        //TODO
+        cout << "Enter weather condition: " << endl;
+        getline(cin, hold);
+        return_value.append("WHERE weather = ");
+        return_value.append(hold);
     }
     else if (input == 10) // Death Count
     {
@@ -371,13 +406,13 @@ string make_query(int count)
             }
         }
         if (hold == "G") {
-            return_value.append("WHERE Fatalities > ");
+            return_value.append("WHERE fatalities > ");
         }
         else if (hold == "L") {
-            return_value.append("WHERE Fatalities < ");
+            return_value.append("WHERE fatalities < ");
         }
         else if (hold == "E") {
-            return_value.append("WHERE Fatalities = ");
+            return_value.append("WHERE fatalities = ");
         }
         if (hold != "exit") {
             cout << "Enter a value for the death count: " << endl;
