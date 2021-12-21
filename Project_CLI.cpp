@@ -55,66 +55,110 @@ int main(const int argc, const char *argv[])
     while (!exit)
     {
         string input;
-        cout << " Type a valid sql command, or type 'exit' to quit: " <<endl;
-        getline (cin, input);
-        if (input == "exit") {
+        string query = "";
+        bool good_query = true;
+        cout << "Would you like (A)dd, (M)odify or (Q)uery the database? Type 'exit' to quit: " << endl;
+        getline(cin, input);
+        if (input == "exit")
+        {
             exit = true;
             cout << "Exiting..." << endl;
             break;
         }
-
-        const char *baseQuery = input.c_str();
-
-        int queryLen = strlen(baseQuery) +
-                       1; // Needed for null terminator
-
-        // Allocate the query buffer
-        char queryBuffer[queryLen];
-
-        // Copy the query into the query buffer
-        strcpy(queryBuffer, baseQuery);
-
-        // Run the query
-        int rc = mysql_query(pMysql, queryBuffer);
-        if (rc)
+        else if (input == "A" || input == "a")
         {
-            cerr << ": mysql_query() error: " << mysql_error(pMysql) << endl
-                 << "rc: " << rc << endl;
+            // Code for adding TODO
         }
-
-        // Fetch the results
-        pQueryResult = mysql_store_result(pMysql);
-        numFields = mysql_field_count(pMysql); // And get the field count
-        if (!pQueryResult)
-        { // We got nothing back; that may be OK
-            cout << "!pQueryResult" << endl;
-            if (numFields == 0)
-            { // We should have nothing back!
-                cerr << argv[0] << ": Information: Query \"" << QUERY << "\" returned zero rows" << endl;
+        else if (input == "M" || input == "m")
+        {
+            // Code for modifying TODO
+        }
+        else if (input == "Q" || input == "q")
+        {
+            // Code for query TODO
+            cout << "Would you like a (L)ist or a (C)ount, or type 'exit' to quit: " << endl;
+            getline(cin, input);
+            if (input == "exit")
+            {
+                exit = true;
+                cout << "Exiting..." << endl;
+                break;
+            }
+            else if (input == "L" || input == "l")
+            {
+                // TODO List
+            }
+            else if (input == "C" || input == "c")
+            {
+                // TODO Count
             }
             else
             {
-                cerr << argv[0] << ": Error: Query \"" << QUERY << "\" failed to return expected data" << endl
-                     << argv[0] << ": error information: " << mysql_error(pMysql) << endl;
+                cout << input << " is not a valid command. Please type, 'C' for count , 'L' for List, or 'exit' to quit" << endl;
+                good_query = false;
             }
         }
         else
-        { // Retrieve the rows
-            cout << "Database";
-            cout << endl
-                 << "--------------" << endl;
-            while ((row = mysql_fetch_row(pQueryResult)))
-            {
-                unsigned long *lengths;
-                lengths = mysql_fetch_lengths(pQueryResult);
-                for (int i = 0; i < numFields; i++)
-                    printf("%.*s ", (int)lengths[i], row[i] ? row[i] : "NULL");
-                printf("\n");
-            }
-            cout << "--------------" << endl;
+        {
+            cout << input << " is not a valid command. Please type, 'C' for count , 'L' for List, or 'exit' to quit" << endl;
+            good_query = false;
         }
-        mysql_free_result(pQueryResult);
-        mysql_close(pMysql);
+
+        if (good_query)
+        {
+            const char *baseQuery = query.c_str();
+
+            int queryLen = strlen(baseQuery) +
+                           1; // Needed for null terminator
+
+            // Allocate the query buffer
+            char queryBuffer[queryLen];
+
+            // Copy the query into the query buffer
+            strcpy(queryBuffer, baseQuery);
+
+            // Run the query
+            int rc = mysql_query(pMysql, queryBuffer);
+            if (rc)
+            {
+                cerr << ": mysql_query() error: " << mysql_error(pMysql) << endl
+                     << "rc: " << rc << endl;
+            }
+
+            // Fetch the results
+            pQueryResult = mysql_store_result(pMysql);
+            numFields = mysql_field_count(pMysql); // And get the field count
+            if (!pQueryResult)
+            { // We got nothing back; that may be OK
+                cout << "!pQueryResult" << endl;
+                if (numFields == 0)
+                { // We should have nothing back!
+                    cerr << argv[0] << ": Information: Query \"" << QUERY << "\" returned zero rows" << endl;
+                }
+                else
+                {
+                    cerr << argv[0] << ": Error: Query \"" << QUERY << "\" failed to return expected data" << endl
+                         << argv[0] << ": error information: " << mysql_error(pMysql) << endl;
+                }
+            }
+            else
+            { // Retrieve the rows
+                cout << "Database";
+                cout << endl
+                     << "--------------" << endl;
+                while ((row = mysql_fetch_row(pQueryResult)))
+                {
+                    unsigned long *lengths;
+                    lengths = mysql_fetch_lengths(pQueryResult);
+                    for (int i = 0; i < numFields; i++)
+                        printf("%.*s ", (int)lengths[i], row[i] ? row[i] : "NULL");
+                    printf("\n");
+                }
+                cout << "--------------" << endl;
+            }
+            mysql_free_result(pQueryResult);
+            mysql_close(pMysql);
+        }
     }
 
     return 0;
