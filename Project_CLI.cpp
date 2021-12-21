@@ -7,6 +7,7 @@
 #include <iostream>
 
 using namespace std;
+string make_query(bool count);
 
 int main(const int argc, const char *argv[])
 {
@@ -76,31 +77,43 @@ int main(const int argc, const char *argv[])
         else if (input == "Q" || input == "q")
         {
             // Code for query TODO
+            int count = 0; // 1 list, 2 count
             cout << "Would you like a (L)ist or a (C)ount, or type 'exit' to quit: " << endl;
             getline(cin, input);
             if (input == "exit")
             {
                 exit = true;
                 cout << "Exiting..." << endl;
-                break;
+                good_query = false;
             }
             else if (input == "L" || input == "l")
             {
-                // TODO List
+                count = 1;
             }
             else if (input == "C" || input == "c")
             {
-                // TODO Count
+                count = 2;
             }
             else
             {
-                cout << input << " is not a valid command. Please type, 'C' for count , 'L' for List, or 'exit' to quit" << endl;
+                cout << input << " is not a valid command." << endl;
                 good_query = false;
+            }
+            query = make_query(count);
+            if (query == "error")
+            {
+                good_query = false;
+            }
+            if (query == "exit")
+            {
+                good_query = false;
+                exit = true;
+                cout << "Exiting..." << endl;
             }
         }
         else
         {
-            cout << input << " is not a valid command. Please type, 'C' for count , 'L' for List, or 'exit' to quit" << endl;
+            cout << input << " is not a valid command." << endl;
             good_query = false;
         }
 
@@ -162,4 +175,226 @@ int main(const int argc, const char *argv[])
     }
 
     return 0;
+}
+
+/*
+ Count: 1 = list, 2 = count
+*/
+string make_query(int count)
+{
+    string return_value = "";
+    if (count == 1)
+    {
+        return_value = "SELECT (ST_CASE, State, Year) from accident INNER JOIN LOCATION USING(ST_CASE) INNER JOIN DATE USING(ST_CASE) ";
+    }
+    else if (count == 2)
+    {
+        return_value = "SELECT COUNT(DISTINCT ST_CASE) from accident INNER JOIN LOCATION USING(ST_CASE) INNER JOIN DATE USING(ST_CASE) ";
+    }
+    else
+    {
+        return "error";
+    }
+
+    int input = 0;
+    bool loop = true;
+    string hold;
+    while (loop)
+    {
+        cout << "Type a valid command, or type 'help' for a list of commands: " << endl;
+        getline(cin, input);
+        if (input == "help")
+        {
+            cout << "-1 : exit" << endl << "1 : case, state" << endl << "2 : Date" << endl;
+            cout << "3 : Location" << endl << "4 : Person Count" << endl << "5 : Injury Type" << endl;
+            cout << "6 : Drunk Driver" << endl << "7 : Roll Over" << endl << "8 : Hit and Run" << endl;
+            cout << "9 : Weather" << endl << "10 : Death Count" << endl;
+        }
+        else
+        {
+            loop = false;
+        }
+    }
+    if (input == -1) // exit
+    {
+        return_value = "exit";
+    }
+    else if (input == 1) // Case, State
+    {
+        cout << "Enter a state and case number: " << endl;
+        getline(cin, hold);
+        return_value.append("WHERE ST_CASE = ");
+        return_value.append(hold);
+    }
+    else if (input == 2) // Date
+    {
+        loop = true;
+        while (loop)
+        {
+            cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
+            getline(cin, hold);
+            if (hold == "G" || hold == "L" || hold == "E" ){
+                loop = false;
+            }
+            if (hold == "exit") {
+                loop = false;
+                return_value = hold;
+            }
+        }
+        if (hold == "G") {
+            return_value.append("WHERE Year > ");
+        }
+        else if (hold == "L") {
+            return_value.append("WHERE Year < ");
+        }
+        else if (hold == "E") {
+            return_value.append("WHERE Year = ");
+        }
+        if (hold != "exit") {
+            cout << "Enter a year: " << endl;
+            getline(cin, hold);
+            return_value.append(hold);
+        }
+    }
+    else if (input == 3) // Location
+    {
+        cout << "Enter a state: " << endl;
+        getline(cin, hold);
+        return_value.append("WHERE State = ");
+        return_value.append(hold);
+    }
+    else if (input == 4) // Persons count
+    {
+        loop = true;
+        while (loop)
+        {
+            cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
+            getline(cin, hold);
+            if (hold == "G" || hold == "L" || hold == "E" ){
+                loop = false;
+            }
+            if (hold == "exit") {
+                loop = false;
+                return_value = hold;
+            }
+        }
+        if (hold == "G") {
+            return_value.append("WHERE Person_count > ");
+        }
+        else if (hold == "L") {
+            return_value.append("WHERE Person_count < ");
+        }
+        else if (hold == "E") {
+            return_value.append("WHERE Person_count = ");
+        }
+        if (hold != "exit") {
+            cout << "Enter a value for the person count: " << endl;
+            getline(cin, hold);
+            return_value.append(hold);
+        }
+    }
+    else if (input == 5) // Injury Type
+    {
+        //TODO
+    }
+    else if (input == 6) // Drunk Driver
+    {
+        loop = true;
+        while (loop)
+        {
+            cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
+            getline(cin, hold);
+            if (hold == "G" || hold == "L" || hold == "E" ){
+                loop = false;
+            }
+            if (hold == "exit") {
+                loop = false;
+                return_value = hold;
+            }
+        }
+        if (hold == "G") {
+            return_value.append("WHERE DRUNK_DR > ");
+        }
+        else if (hold == "L") {
+            return_value.append("WHERE DRUNK_DR < ");
+        }
+        else if (hold == "E") {
+            return_value.append("WHERE DRUNK_DR = ");
+        }
+        if (hold != "exit") {
+            cout << "Enter a value for the drunk driver count: " << endl;
+            getline(cin, hold);
+            return_value.append(hold);
+        }
+    }
+    else if (input == 7) // Roll Over
+    {
+        return_value.append("INNER JOIN vehicle USING(ST_CASE) WHERE Rollover = ";
+        cout << "Rollover (y/n): " << endl;
+        getline(cin, hold);
+        if (hold == "y") {
+            return_value.append("1");
+        }
+        if (hold == "n") {
+            return_value.append("0");
+        }
+    }
+    else if (input == 8) // Hit and Run
+    {
+        return_value.append("INNER JOIN vehicle USING(ST_CASE) WHERE HIT_RUN = ";
+        cout << "Hit and run (y/n): " << endl;
+        getline(cin, hold);
+        if (hold == "y") {
+            return_value.append("1");
+        }
+        if (hold == "n") {
+            return_value.append("0");
+        }
+    }
+    else if (input == 9) // Weather
+    {
+        //TODO
+    }
+    else if (input == 10) // Death Count
+    {
+        loop = true;
+        while (loop)
+        {
+            cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
+            getline(cin, hold);
+            if (hold == "G" || hold == "L" || hold == "E" ){
+                loop = false;
+            }
+            if (hold == "exit") {
+                loop = false;
+                return_value = hold;
+            }
+        }
+        if (hold == "G") {
+            return_value.append("WHERE Fatalities > ");
+        }
+        else if (hold == "L") {
+            return_value.append("WHERE Fatalities < ");
+        }
+        else if (hold == "E") {
+            return_value.append("WHERE Fatalities = ");
+        }
+        if (hold != "exit") {
+            cout << "Enter a value for the death count: " << endl;
+            getline(cin, hold);
+            return_value.append(hold);
+        }
+    }
+    else
+    {
+        cout << input << " is not a valid command." << endl;
+        return_value = "error";
+    }
+
+    if (return_value != "error" && return_value != "exit")
+    {
+        return_value.append(";");
+    }
+
+    return return_value;
 }
