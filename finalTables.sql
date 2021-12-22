@@ -1,3 +1,5 @@
+-- PART 1: CREATE REFERENCE TABLES, PLEASE SKIP TO LINE 297 TO SEE ACTUAL TABLES BEING CREATED
+
 CREATE TABLE State (
     stateID decimal(2,0),
     stateName varchar (45),
@@ -291,8 +293,11 @@ VALUES
     (8, 'Not reported'),
     (9, 'Unknown');
 
+
+-- PART 2: CREATE THE ACTUAL DATA TABLES
+
+-- Create and Populate Accident Table
 CREATE TABLE Accident (
-    state decimal(2,0) NOT NULL,
     stateCase decimal(6,0) NOT NULL,
     veForms decimal(2,0),
     dateID int,
@@ -307,25 +312,29 @@ CREATE TABLE Accident (
     drunkDrivers decimal (2,0),
     fatalities decimal (2,0),
     CONSTRAINT PK_Accident PRIMARY KEY (stateCase),
-    FOREIGN KEY (state) REFERENCES State(stateID),
     FOREIGN KEY (route) REFERENCES Route(routeID)
 );
 
 LOAD DATA INFILE '/var/lib/mysql-files/Group72/accident.csv' INTO Table Accident 
 FIELDS TERMINATED by ',' ENCLOSED BY '"' 
 LINES TERMINATED BY '\n' IGNORE 1 LINES 
-(state, stateCase, @dummy, veForms, @dummy, peds, @dummy, @dummy, persons, @dummy, 
+(@dummy, stateCase, @dummy, veForms, @dummy, peds, @dummy, @dummy, persons, @dummy, 
 @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy,
 route, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, 
 @dummy, @dummy, @dummy, lightEnum, @dummy, @dummy, weatherEnum, @dummy, @dummy, @dummy, @dummy, 
 @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, fatalities, drunkDrivers);
 
-Update Accident INNER JOIN Weather ON Accident.weatherEnum = Weather.weatherID SET Accident.weather = Weather.weatherDesc;
-Update Accident INNER JOIN Light ON Accident.lightEnum = Light.lightID SET Accident.lightConditions = Light.lightDesc;
+-- fill weather and lightConditions from their ennum values in the CSV
+Update Accident INNER JOIN Weather ON Accident.weatherEnum = Weather.weatherID 
+SET Accident.weather = Weather.weatherDesc;
+Update Accident INNER JOIN Light ON Accident.lightEnum = Light.lightID 
+SET Accident.lightConditions = Light.lightDesc;
+
+-- reference tables and old enum columns are no longer needed
 ALTER TABLE Accident DROP COLUMN lightEnum, DROP COLUMN weatherEnum;
 DROP TABLE Weather, Light;
 
-
+-- Create the Date table
 CREATE TABLE Date (
     dateID int NOT NULL AUTO_INCREMENT,
     stateCase decimal (6,0),
@@ -337,7 +346,7 @@ CREATE TABLE Date (
     minute decimal (2,0),
     PRIMARY KEY (dateID)
 );
-
+-- Load the data that was originally in accidents to Date
 LOAD DATA INFILE '/var/lib/mysql-files/Group72/accident.csv' INTO Table Date 
 FIELDS TERMINATED by ',' ENCLOSED BY '"' 
 LINES TERMINATED BY '\n' IGNORE 1 LINES 
@@ -347,9 +356,12 @@ LINES TERMINATED BY '\n' IGNORE 1 LINES
 @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, 
 @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy);
 
+-- Set the reference in Accident to actually reference the correct Date and add FK to Date
 Update Accident INNER JOIN Date ON Accident.stateCase = Date.stateCase SET Accident.dateID = Date.dateID;
 ALTER TABLE Accident ADD FOREIGN KEY (dateID) REFERENCES Date(dateID);
 
+
+-- Repeat process done for Date with Location
 CREATE TABLE Location (
     locationID int NOT NULL AUTO_INCREMENT,
     stateCase decimal (6,0),
@@ -374,8 +386,8 @@ city, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @d
 Update Accident INNER JOIN Location ON Accident.stateCase = Location.stateCase SET Accident.locationID = Location.locationID;
 ALTER TABLE Accident ADD FOREIGN KEY (locationID) REFERENCES Location(locationID);
 
+-- Create the Vehicle table
 CREATE TABLE Vehicle (
-    state decimal(2,0) NOT NULL,
     stateCase decimal(6,0) NOT NULL,
     vehicleNumber decimal(2,0) NOT NULL,
     numOccs decimal(2,0),
@@ -393,16 +405,15 @@ CREATE TABLE Vehicle (
     speedLimit decimal (3,0),
     PRIMARY KEY (stateCase, vehicleNumber),
     FOREIGN KEY (stateCase) REFERENCES Accident(stateCase),
-    FOREIGN KEY (state) REFERENCES State(stateID),
     FOREIGN KEY (owner) REFERENCES Owner(ownerID),
     FOREIGN KEY (registeredState) REFERENCES State(stateID),
     FOREIGN KEY (collisionManner) REFERENCES CollisionManner(collisionMannerID)
 );
--- THE IGNORE 22k is cuz of a special character at around 21500, will try to find a better workaround but there are still 26k lines after
+-- THE IGNORE 22k is becuase of a special character at around 21500, will try to find a better workaround but there are still 26k lines after
 LOAD DATA INFILE '/var/lib/mysql-files/Group72/vehicle.csv' INTO Table Vehicle
 FIELDS TERMINATED by ',' ENCLOSED BY '"' 
-LINES TERMINATED BY '\n' IGNORE 22000 LINES 
-(state, stateCase, vehicleNumber, @dummy, numOccs, @dummy, @dummy, @dummy, @dummy, @dummy, 
+LINES TERMINATED BY '\n' IGNORE 21500 LINES
+(@dummy, stateCase, vehicleNumber, @dummy, numOccs, @dummy, @dummy, @dummy, @dummy, @dummy, 
 collisionManner, @dummy, hitAndRun, registeredState, owner, makeEnum, model, @dummy, @dummy, 
 modelYear, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, 
 @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy,
@@ -413,12 +424,14 @@ modelYear, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dumm
 @dummy, @dummy, speedLimit, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy,
 @dummy, @dummy, @dummy, @dummy, deaths, driverDrunk);
 
+-- Similar to what was done with weather and lightConditions, update the reference in make to an english value
 Update Vehicle INNER JOIN Make ON Vehicle.makeEnum = Make.makeID SET Vehicle.make = Make.makeDesc;
 ALTER TABLE Vehicle DROP COLUMN makeEnum;
 DROP TABLE Make;
 
+-- Create NonMotorist Table
+
 CREATE TABLE NonMotorist (
-    state decimal(2,0) NOT NULL,
     stateCase decimal(6,0) NOT NULL,
     personNumber decimal(2,0) NOT NULL,
     passerbyType decimal(2,0),
@@ -433,10 +446,11 @@ CREATE TABLE NonMotorist (
 LOAD DATA INFILE '/var/lib/mysql-files/Group72/pbtype.csv' INTO Table NonMotorist
 FIELDS TERMINATED by ',' ENCLOSED BY '"' 
 LINES TERMINATED BY '\n' IGNORE 1 LINES
-(state, stateCase, @dummy, personNumber, passerbyType, age, sexEnum, @dummy, @dummy, @dummy, 
+(@dummy, stateCase, @dummy, personNumber, passerbyType, age, sexEnum, @dummy, @dummy, @dummy, 
 @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy,
 @dummy, @dummy, @dummy);
 
+--Same process as done on Make, weather etc but this time on sex, number goes to Male, Female or Unknown
 Update NonMotorist INNER JOIN Gender ON NonMotorist.sexEnum = Gender.genderID SET NonMotorist.sex = Gender.genderDesc;
 ALTER TABLE NonMotorist DROP COLUMN sexEnum;
 DROP TABLE Gender;
