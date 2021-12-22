@@ -81,27 +81,26 @@ int main(const int argc, const char *argv[])
         else if (input == "Q" || input == "q")
         {
             // Code for query
-            string test;
             int count = 0; // 1 list, 2 count
             cout << "Would you like a (L)ist or a (C)ount, or type 'exit' to quit: " << endl;
-            getline(cin, test);
-            if (test == "exit")
+            getline(cin, input);
+            if (input == "exit")
             {
                 exit = true;
                 cout << "Exiting..." << endl;
                 good_query = false;
             }
-            else if (test == "L" || test == "l")
+            else if (input == "L" || input == "l")
             {
                 count = 1;
             }
-            else if (test == "C" || test == "c")
+            else if (input == "C" || input == "c")
             {
                 count = 2;
             }
             else
             {
-                cout << test << " is not a valid command." << endl;
+                cout << input << " is not a valid command." << endl;
             }
             query = make_query(count);
         }
