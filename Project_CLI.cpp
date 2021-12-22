@@ -188,11 +188,11 @@ string make_query(int count)
     string return_value = "";
     if (count == 1)
     {
-        return_value = "SELECT (state, case, year) from Accident INNER JOIN DATE USING(state, case) ";
+        return_value = "SELECT (stateCase, year) from Accident INNER JOIN DATE USING(stateCase) ";
     }
     else if (count == 2)
     {
-        return_value = "SELECT COUNT(DISTINCT state, case) from Accident ";
+        return_value = "SELECT COUNT(DISTINCT stateCase) from Accident ";
     }
     else
     {
@@ -209,7 +209,7 @@ string make_query(int count)
         if (input == "help")
         {
             cout << "-1 : exit" << endl
-                 << "1 : case, state" << endl
+                 << "1 : stateCase" << endl
                  << "2 : Date" << endl;
             cout << "3 : Location" << endl
                  << "4 : Person Count" << endl
@@ -231,18 +231,14 @@ string make_query(int count)
     }
     else if (input == "1") // Case, State
     {
-        cout << "Enter a case number: " << endl;
+        cout << "Enter a state case number: " << endl;
         getline(cin, hold);
-        return_value.append("WHERE case = ");
-        return_value.append(hold);
-        cout << "Enter a state number: " << endl;
-        getline(cin, hold);
-        return_value.append("AND WHERE state = ");
+        return_value.append("WHERE stateCase = ");
         return_value.append(hold);
     }
     else if (input == "2") // Date
     {
-        return_value.append("INNER JOIN Date USING(state, case) ");
+        return_value.append("INNER JOIN Date USING(stateCase) ");
         loop = true;
         while (loop)
         {
@@ -318,7 +314,7 @@ string make_query(int count)
     }
     else if (input == "5") // Speed Limit
     {
-        return_value.append("INNER JOIN Vehicle USING(state, case) ");
+        return_value.append("INNER JOIN Vehicle USING(stateCase) ");
         loop = true;
         while (loop)
         {
@@ -387,7 +383,7 @@ string make_query(int count)
     }
     else if (input == "7") // Roll Over
     {
-        return_value.append("INNER JOIN Vehicle USING(state, case) WHERE rollover = ");
+        return_value.append("INNER JOIN Vehicle USING(stateCase) WHERE rollover = ");
         cout << "Rollover (y/n): " << endl;
         getline(cin, hold);
         if (hold == "y") {
@@ -399,7 +395,7 @@ string make_query(int count)
     }
     else if (input == "8") // Hit and Run
     {
-        return_value.append("INNER JOIN Vehicle USING(state, case) WHERE hitAndRun = ");
+        return_value.append("INNER JOIN Vehicle USING(stateCase) WHERE hitAndRun = ");
         cout << "Hit and run (y/n): " << endl;
         getline(cin, hold);
         if (hold == "y") {
@@ -468,14 +464,10 @@ string make_query(int count)
 
 string add_query()
 {
-    string return_value = "INSERT INTO Accidents(state, case) VALUES (";
+    string return_value = "INSERT INTO Accidents(stateCase) VALUES (";
     string input;
 
-    cout << "What is the State: " << endl;
-    getline(cin, input);
-    return_value.append(input);
-    return_value.append(", ");
-    cout << "What is the case number: " << endl;
+    cout << "What is the state case number: " << endl;
     getline(cin, input);
     return_value.append(input);
     return_value.append(");");
@@ -492,14 +484,9 @@ string modify_query()
     string return_value = "UPDATE Accidents SET ";
     string input;
 
-    cout << "What is the new State: " << endl;
+    cout << "What is the new state case number: " << endl;
     getline(cin, input);
-    return_value.append("state = ");
-    return_value.append(input);
-    return_value.append(", ");
-    cout << "What is the case number: " << endl;
-    getline(cin, input);
-    return_value.append("case = ");
+    return_value.append("stateCase = ");
     return_value.append(input);
 
     return return_value;
