@@ -16,7 +16,7 @@ int main(const int argc, const char *argv[])
 
     const char *USERID = "ccherny"; // Your UserID here
     const char *SERVER = "marmoset04.shoshin.uwaterloo.ca";
-    const char *DBNAME = "ccherny"; // Can specify a database; don't want to
+    const char *DBNAME = "db356_ccherny"; // Can specify a database; don't want to
 
     MYSQL mysql;            // Space for handler
     MYSQL *pMysql = &mysql; // Pointer to handler
