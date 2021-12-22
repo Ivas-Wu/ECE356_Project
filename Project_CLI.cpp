@@ -199,7 +199,7 @@ string make_query(int count)
         return "error";
     }
 
-    string input = 0;
+    string input = "";
     bool loop = true;
     string hold;
     while (loop)
