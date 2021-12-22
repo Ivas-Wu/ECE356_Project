@@ -463,30 +463,30 @@ string make_query(int count)
 
 string add_query()
 {
-    string return_value = "INSERT INTO Accidents(stateCase) VALUES (";
+    string return_value = "INSERT INTO Accident(stateCase) VALUES (";
     string input;
 
     cout << "What is the state case number: " << endl;
     getline(cin, input);
     return_value.append(input);
     return_value.append(");");
-    // cout << "What is the year: " << endl;
-    // getline(cin, input);
-    // cout << "What is the month: " << endl;
-    // getline(cin, input);
 
     return return_value;
 }
 
 string modify_query()
 {
-    string return_value = "UPDATE Accidents SET ";
-    string input;
+    string return_value = "UPDATE Accident SET ";
+    string input, hold;
 
-    cout << "What is the new state case number: " << endl;
+    cout << "What is the old state case number: " << endl;
     getline(cin, input);
+    cout << "What is the old state case number: " << endl;
+    getline(cin, hold);
     return_value.append("stateCase = ");
     return_value.append(input);
+    return_value.append(" WHERE stateCase = ");
+    return_value.append(hold);
 
     return return_value;
 }
