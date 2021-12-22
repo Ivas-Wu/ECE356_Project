@@ -243,7 +243,7 @@ string make_query(int count)
         {
             cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
             getline(cin, hold);
-            if (hold == "G" || hold == "g" || hold == "L" || hold == "E" || hold == "e")
+            if (hold == "G" || hold == "g" || hold == "L" || hold == "l" || hold == "E" || hold == "e")
             {
                 loop = false;
             }
@@ -256,7 +256,7 @@ string make_query(int count)
         if (hold == "G" || hold == "g") {
             return_value.append("WHERE year > ");
         }
-        else if (hold == "L") {
+        else if (hold == "L" || hold == "l") {
             return_value.append("WHERE year < ");
         }
         else if (hold == "E" || hold == "e") {
@@ -270,7 +270,7 @@ string make_query(int count)
     }
     else if (input == "3") // Location
     {
-        cout << "Enter a state: " << endl;
+        cout << "Enter a stateID: " << endl;
         getline(cin, hold);
         return_value.append("WHERE state = ");
         return_value.append(hold);
@@ -282,7 +282,7 @@ string make_query(int count)
         {
             cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
             getline(cin, hold);
-            if (hold == "G" || hold == "g" || hold == "L" || hold == "E" || hold == "e")
+            if (hold == "G" || hold == "g" || hold == "L" || hold == "l" || hold == "E" || hold == "e")
             {
                 loop = false;
             }
@@ -296,7 +296,7 @@ string make_query(int count)
         {
             return_value.append("WHERE persons > ");
         }
-        else if (hold == "L")
+        else if (hold == "L" || hold == "l")
         {
             return_value.append("WHERE persons < ");
         }
@@ -332,7 +332,7 @@ string make_query(int count)
         if (hold == "G" || hold == "g") {
             return_value.append("WHERE speedLimit > ");
         }
-        else if (hold == "L") {
+        else if (hold == "L" || hold == "l") {
             return_value.append("WHERE speedLimit < ");
         }
         else if (hold == "E" || hold == "e") {
@@ -351,7 +351,7 @@ string make_query(int count)
         {
             cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
             getline(cin, hold);
-            if (hold == "G" || hold == "g" || hold == "L" || hold == "E" || hold == "e")
+            if (hold == "G" || hold == "g" || hold == "L" || hold == "l" || hold == "E" || hold == "e")
             {
                 loop = false;
             }
@@ -365,7 +365,7 @@ string make_query(int count)
         {
             return_value.append("WHERE drunkDrivers > ");
         }
-        else if (hold == "L")
+        else if (hold == "L" || hold == "l")
         {
             return_value.append("WHERE drunkDrivers < ");
         }
@@ -408,8 +408,9 @@ string make_query(int count)
     {
         cout << "Enter weather condition: " << endl;
         getline(cin, hold);
-        return_value.append("WHERE weather = ");
+        return_value.append("WHERE weather = \"");
         return_value.append(hold);
+        return_value.append("\"");
     }
     else if (input == "10") // Death Count
     {
@@ -418,7 +419,7 @@ string make_query(int count)
         {
             cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
             getline(cin, hold);
-            if (hold == "G" || hold == "g" || hold == "L" || hold == "E" || hold == "e")
+            if (hold == "G" || hold == "g" || hold == "L" || hold == "l" || hold == "E" || hold == "e")
             {
                 loop = false;
             }
@@ -432,7 +433,7 @@ string make_query(int count)
         {
             return_value.append("WHERE fatalities > ");
         }
-        else if (hold == "L")
+        else if (hold == "L" || hold == "l")
         {
             return_value.append("WHERE fatalities < ");
         }
