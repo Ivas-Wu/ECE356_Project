@@ -14,10 +14,9 @@ string modify_query();
 int main(const int argc, const char *argv[])
 {
 
-    const char *USERID = "i6wu"; // Your UserID here
-    const char *SERVER = "marmoset02.shoshin.uwaterloo.ca";
-    const char *DBNAME = ""; // Can specify a database; don't want to
-    const char *QUERY = "select schema_name from information_schema.schemata order by schema_name";
+    const char *USERID = "ccherny"; // Your UserID here
+    const char *SERVER = "marmoset04.shoshin.uwaterloo.ca";
+    const char *DBNAME = "ccherny"; // Can specify a database; don't want to
 
     MYSQL mysql;            // Space for handler
     MYSQL *pMysql = &mysql; // Pointer to handler
@@ -149,11 +148,11 @@ int main(const int argc, const char *argv[])
                 cout << "!pQueryResult" << endl;
                 if (numFields == 0)
                 { // We should have nothing back!
-                    cerr << argv[0] << ": Information: Query \"" << QUERY << "\" returned zero rows" << endl;
+                    cerr << argv[0] << ": Information: Query \"" << query << "\" returned zero rows" << endl;
                 }
                 else
                 {
-                    cerr << argv[0] << ": Error: Query \"" << QUERY << "\" failed to return expected data" << endl
+                    cerr << argv[0] << ": Error: Query \"" << query << "\" failed to return expected data" << endl
                          << argv[0] << ": error information: " << mysql_error(pMysql) << endl;
                 }
             }
@@ -188,7 +187,7 @@ string make_query(int count)
     string return_value = "";
     if (count == 1)
     {
-        return_value = "SELECT (stateCase, year) from Accident INNER JOIN DATE USING(stateCase) ";
+        return_value = "SELECT (stateCase, year) from Accident INNER JOIN Date USING(stateCase) ";
     }
     else if (count == 2)
     {
@@ -238,13 +237,14 @@ string make_query(int count)
     }
     else if (input == "2") // Date
     {
-        return_value.append("INNER JOIN Date USING(stateCase) ");
+        if (count == 2)
+            return_value.append("INNER JOIN Date USING(stateCase) ");
         loop = true;
         while (loop)
         {
             cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
             getline(cin, hold);
-            if (hold == "G" || hold == "L" || hold == "E")
+            if (hold == "G" || hold == "g" || hold == "L" || hold == "E" || hold == "e")
             {
                 loop = false;
             }
@@ -254,13 +254,13 @@ string make_query(int count)
                 return_value = hold;
             }
         }
-        if (hold == "G") {
+        if (hold == "G" || hold == "g") {
             return_value.append("WHERE year > ");
         }
         else if (hold == "L") {
             return_value.append("WHERE year < ");
         }
-        else if (hold == "E") {
+        else if (hold == "E" || hold == "e") {
             return_value.append("WHERE year = ");
         }
         if (hold != "exit") {
@@ -283,7 +283,7 @@ string make_query(int count)
         {
             cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
             getline(cin, hold);
-            if (hold == "G" || hold == "L" || hold == "E")
+            if (hold == "G" || hold == "g" || hold == "L" || hold == "E" || hold == "e")
             {
                 loop = false;
             }
@@ -293,7 +293,7 @@ string make_query(int count)
                 return_value = hold;
             }
         }
-        if (hold == "G")
+        if (hold == "G" || hold == "g")
         {
             return_value.append("WHERE persons > ");
         }
@@ -301,7 +301,7 @@ string make_query(int count)
         {
             return_value.append("WHERE persons < ");
         }
-        else if (hold == "E")
+        else if (hold == "E" || hold == "e")
         {
             return_value.append("WHERE persons = ");
         }
@@ -320,7 +320,7 @@ string make_query(int count)
         {
             cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
             getline(cin, hold);
-            if (hold == "G" || hold == "L" || hold == "E")
+            if (hold == "G" || hold == "g" || hold == "L" || hold == "l" || hold == "E" || hold == "e")
             {
                 loop = false;
             }
@@ -330,13 +330,13 @@ string make_query(int count)
                 return_value = hold;
             }
         }
-        if (hold == "G") {
+        if (hold == "G" || hold == "g") {
             return_value.append("WHERE speedLimit > ");
         }
         else if (hold == "L") {
             return_value.append("WHERE speedLimit < ");
         }
-        else if (hold == "E") {
+        else if (hold == "E" || hold == "e") {
             return_value.append("WHERE speedLimit = ");
         }
         if (hold != "exit") {
@@ -352,7 +352,7 @@ string make_query(int count)
         {
             cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
             getline(cin, hold);
-            if (hold == "G" || hold == "L" || hold == "E")
+            if (hold == "G" || hold == "g" || hold == "L" || hold == "E" || hold == "e")
             {
                 loop = false;
             }
@@ -362,7 +362,7 @@ string make_query(int count)
                 return_value = hold;
             }
         }
-        if (hold == "G")
+        if (hold == "G" || hold == "g")
         {
             return_value.append("WHERE drunkDrivers > ");
         }
@@ -370,7 +370,7 @@ string make_query(int count)
         {
             return_value.append("WHERE drunkDrivers < ");
         }
-        else if (hold == "E")
+        else if (hold == "E" || hold == "e")
         {
             return_value.append("WHERE drunkDrivers = ");
         }
@@ -419,7 +419,7 @@ string make_query(int count)
         {
             cout << "(G)reater than, (L)ess than, or (E)qual, or type 'exit' to quit: " << endl;
             getline(cin, hold);
-            if (hold == "G" || hold == "L" || hold == "E")
+            if (hold == "G" || hold == "g" || hold == "L" || hold == "E" || hold == "e")
             {
                 loop = false;
             }
@@ -429,7 +429,7 @@ string make_query(int count)
                 return_value = hold;
             }
         }
-        if (hold == "G")
+        if (hold == "G" || hold == "g")
         {
             return_value.append("WHERE fatalities > ");
         }
@@ -437,7 +437,7 @@ string make_query(int count)
         {
             return_value.append("WHERE fatalities < ");
         }
-        else if (hold == "E")
+        else if (hold == "E" || hold == "e")
         {
             return_value.append("WHERE fatalities = ");
         }
