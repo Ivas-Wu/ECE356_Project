@@ -496,6 +496,10 @@ string modify_query()
     return_value.append(input);
     return_value.append(" WHERE stateCase = ");
     return_value.append(hold);
+    return_value.append("; UPDATE Date SET stateCase = ");
+    return_value.append(input);
+    return_value.append(" WHERE stateCase = ");
+    return_value.append(hold);
 
     return return_value;
 }
