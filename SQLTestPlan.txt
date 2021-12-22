@@ -1,0 +1,50 @@
+TEST PLAN
+SQL:
+    If you haven't already, please run finalTables.sql to obtain the relevant tables and data.
+    All of the sql commands following should be run on the db where this sql file was run.
+
+    TestCase1:
+        Procedure: run "show tables;"
+        Expected outcome: 10 tables should be listed
+        Why: This shows that the script generated the tables it was supposed to, but it does not check
+        if they loaded data appropriately or not.
+    TestCase2:
+        Procedure: run "SELECT * FROM Accident LIMIT 10;"
+        Expected outcome: 10 rows with 12 columns of data each. Confirm that weather and lightConditions has an 
+        english language value instead of just an id. 
+        Why: This confirms that the data loading process worked. To confirm that all of the lines loaded, add
+        an offset of 20000 to the query
+    TestCase3: 
+        Procdedure: run "SELECT Accident.dateID, Accident.stateCase, Date.stateCase, day, month, year FROM
+        Date INNER JOIN Accident ON Accident.dateID = Date.dateID
+        LIMIT 10;"
+        Expected outcome: 10 rows with valid days in month 1 of year 2015, as well as matching stateCases
+        Why: The tables are joined on dateID, so each of them having the same stateCase proves that they were
+        joined correctly as well as proving the date table loaded.
+    TestCase4: 
+        Procdedure: run "SELECT Accident.locationID, Accident.stateCase, Location.stateCase, city, county FROM
+        Location INNER JOIN Accident ON Accident.locationID = Location.locationID
+        LIMIT 10;"
+        Expected outcome: 10 rows with valid county numners as well as matching stateCases
+        Why: The tables are joined on locationID, so each of them having the same stateCase proves that they were
+        joined correctly as well as proving the location table loaded. (same as test case 3 but for Location)
+    TestCase5: 
+        Procedure: run "SELECT * FROM Vehicle LIMIT 10;"
+        Expected outcome: 10 rows with 15 columns of data each. Confirm that make has an english language value instead of just an id.
+        Also confirm there is no makeEnum column. 
+        Why: This confirms that the data loading process worked. To confirm that all of the lines loaded, add
+        an offset of 20000 to the query
+    TestCase6: 
+        Procedure: run "SELECT stateName, registeredState FROM 
+        Vehicle INNER JOIN State ON Vehicle.registeredState = State.stateID
+        LIMIT 10 OFFSET 5180;"
+        Expected outcome: Ensure that stateName and registeredState each map correctly.
+        Change the offset to change the state returned.
+        Why: State names matching the registeredState ensures that registeredState maps correctly. This confirms the
+        state reference table was input correctly and joined appropriately. 
+    
+    NOTE: Test cases can be done in the spirit of the preceding for every table. Only these procedures were written out as 
+    a lot of the loading / joining procedure was copied between tables, so testing if the process works once will mean it very likely
+    works for the other tables. For completeness, you can repeat the loading test done on Accident and Vehicle to be done on NonMotorist
+    as well. You could also check the validity of the state join on any of the state fields, or check the reference table join
+    of other fields such as Accident.route or Vehicle.Owner (just join Accident.route to Route.routeID and print out routeDesc for example).
