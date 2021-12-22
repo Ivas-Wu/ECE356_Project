@@ -1,0 +1,76 @@
+To make your own build, change the username and database name in the Project.CLI.cpp and then make a new build using:
+
+g++ Project_CLI.cpp -o test -lmysqlclient
+
+or a name of choice (you just need the -lmysqlclient flag).
+
+./test (./{file name})
+
+Follow the prompts on screen, a few examples listed below:
+
+TestCase1:
+        Inputs: q (Query), c (Count), 2 (Date), e (Equal), 2015
+        Expected outcome: 32165
+        Why: We count the number of accidents that happened in 2015 and return the count
+        Query: SELECT COUNT(DISTINCT stateCase) from Accident WHERE year = 2015;
+
+TestCase2:
+        Inputs: q (Query), c (Count), 2 (Date), e (Equal), 2014
+        Expected outcome: 0
+        Why: We count the number of accidents that happened in 2014 and return the count
+        Query: SELECT COUNT(DISTINCT stateCase) from Accident WHERE year = 2014;
+
+TestCase3:
+        Inputs: q (Query), l (List), 1 (stateCase), 100001
+        Expected outcome: 100001 2015
+        Why: We list the accidents that have the stateCase 100001 (state 1, casenumber 00001)
+        Query: SELECT stateCase, year from Accident INNER JOIN Date USING(stateCase) WHERE stateCase = 100001;
+
+TestCase4:
+        Inputs: q (Query), c (Count), 3 (Location), 1 (Alabama)
+        Expected outcome: 783
+        Why: We list the accidents that have occured in the state of Alabama
+        Query: SELECT COUNT(DISTINCT stateCase) from Accident WHERE state = 1;
+
+
+TestCase5:
+        Inputs: q (Query), c (Count), 4 (Person Count), g (Greater Than), 40
+        Expected outcome: 6
+        Why: We list the accidents that have a person count of greater than 40
+        Query: SELECT COUNT(DISTINCT stateCase) from Accident WHERE persons > 40;
+
+TestCase6:
+        Inputs: q (Query), c (Count), 5 (Speed Limit), l (Less Than), 150
+        Expected outcome: 18018
+        Why: We list the accidents that have occured with a speed limit of less than 150
+        Query: SELECT COUNT(DISTINCT stateCase) from Accident INNER JOIN Vehicle USING(stateCase) WHERE speedLimit <  1;   
+
+TestCase7:
+        Inputs: q (Query), c (Count), 6 (Drunk driver), e (equal), 3
+        Expected outcome: 2
+        Why: We list the accidents that have exactly 3 drunk drivers involved
+        Query: SELECT COUNT(DISTINCT stateCase) from Accident WHERE drunkDrivers =  3;  
+
+TestCase8:
+        Inputs: q (Query), c (Count), 7 (Rollover), n (no)
+        Expected outcome: 14569
+        Why: We list the accidents that where not rollovers
+        Query: SELECT COUNT(DISTINCT stateCase) from Accident INNER JOIN Vehicle USING(stateCase) WHERE rollover = 0; 
+
+TestCase9:
+        Inputs: q (Query), c (Count), 8 (Hit and run), y (yes)
+        Expected outcome: 833
+        Why: We list the accidents that where hit and runs
+        Query: SELECT COUNT(DISTINCT stateCase) from Accident INNER JOIN Vehicle USING(stateCase) WHERE hitAndRun = 1;    
+
+TestCase10:
+        Inputs: q (Query), c (Count), 9 (weather), cloudy (cloudy)
+        Expected outcome: 5481
+        Why: We list the accidents that occured in cloudy conditions
+        Query: SELECT COUNT(DISTINCT stateCase) from Accident WHERE weather = "cloudy";    
+
+TestCase11:
+        Inputs: q (Query), c (Count), 10 (deaths), e (equal), 5
+        Expected outcome: 24
+        Why: We list the accidents that resulted in exactly 5 deaths
+        Query: SELECT COUNT(DISTINCT stateCase) from Accident WHERE fatalities = 5;          
