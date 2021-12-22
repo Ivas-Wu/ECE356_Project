@@ -480,9 +480,9 @@ string modify_query()
     string input, hold;
 
     cout << "What is the old state case number: " << endl;
-    getline(cin, input);
-    cout << "What is the old state case number: " << endl;
     getline(cin, hold);
+    cout << "What is the new state case number: " << endl;
+    getline(cin, input);
     return_value.append("stateCase = ");
     return_value.append(input);
     return_value.append(" WHERE stateCase = ");
