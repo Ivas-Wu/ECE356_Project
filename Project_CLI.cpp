@@ -22,7 +22,7 @@ int main(const int argc, const char *argv[])
     MYSQL mysql;            // Space for handler
     MYSQL *pMysql = &mysql; // Pointer to handler
 
-    const int bufLen = 256;
+
 
     MYSQL_RES *pQueryResult; // Pointer to query result handler
     MYSQL_ROW row;           // Space for result row
