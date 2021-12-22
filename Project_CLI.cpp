@@ -54,7 +54,7 @@ int main(const int argc, const char *argv[])
             return -1;
         }
 
-        mysql_set_server_option(MYSQL *mysql, MYSQL_OPTION_MULTI_STATEMENTS_ON);
+        mysql_set_server_option(pMysql, MYSQL_OPTION_MULTI_STATEMENTS_ON);
 
         string input;
         string query = "";
