@@ -204,9 +204,9 @@ string make_query(int count)
     string hold;
     while (loop)
     {
-        cout << "Type a valid command, or type 'help' for a list of commands: " << endl;
+        cout << "Type a valid command, or type '0' for a list of commands: " << endl;
         getline(cin, input);
-        if (input == "help")
+        if (input == 0)
         {
             cout << "-1 : exit" << endl
                  << "1 : case, state" << endl
