@@ -31,30 +31,31 @@ int main(const int argc, const char *argv[])
     bool exit = false;
     while (!exit)
     {
-    // Attempt DB connection
-    // Get a handler first
+        // Attempt DB connection
+        // Get a handler first
 
-    if (!mysql_init(pMysql))
-    {
-        cerr << ": mysql_init() error: insufficient memory" << endl;
-        return -1 * ENOMEM;
-    }
+        if (!mysql_init(pMysql))
+        {
+            cerr << ": mysql_init() error: insufficient memory" << endl;
+            return -1 * ENOMEM;
+        }
 
-    // Prompt for a password and connect (use default port 3306)
-    if (!mysql_real_connect(pMysql,
-                            SERVER,
-                            USERID,
-                            passwd,
-                            DBNAME,
-                            0,    // Use default port (3306)
-                            NULL, // Not using unix socket or named pipe
-                            0))
-    { // No client flags
-        cerr << ": mysql_real_connect() error: " << mysql_error(pMysql) << endl;
-        return -1;
-    }
+        // Prompt for a password and connect (use default port 3306)
+        if (!mysql_real_connect(pMysql,
+                                SERVER,
+                                USERID,
+                                passwd,
+                                DBNAME,
+                                0,    // Use default port (3306)
+                                NULL, // Not using unix socket or named pipe
+                                0))
+        { // No client flags
+            cerr << ": mysql_real_connect() error: " << mysql_error(pMysql) << endl;
+            return -1;
+        }
 
-    
+        mysql_set_server_option(MYSQL *mysql, MYSQL_OPTION_MULTI_STATEMENTS_ON);
+
         string input;
         string query = "";
         bool good_query = true;
