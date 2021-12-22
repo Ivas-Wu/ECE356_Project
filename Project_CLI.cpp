@@ -7,7 +7,7 @@
 #include <iostream>
 
 using namespace std;
-string make_query(bool count);
+string make_query(int count);
 string add_query();
 string modify_query();
 
