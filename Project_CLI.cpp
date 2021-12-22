@@ -187,7 +187,7 @@ string make_query(int count)
     string return_value = "";
     if (count == 1)
     {
-        return_value = "SELECT (stateCase, year) from Accident INNER JOIN Date USING(stateCase) ";
+        return_value = "SELECT stateCase, year from Accident INNER JOIN Date USING(stateCase) ";
     }
     else if (count == 2)
     {
