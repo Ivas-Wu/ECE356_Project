@@ -14,9 +14,9 @@ string modify_query();
 int main(const int argc, const char *argv[])
 {
 
-    const char *USERID = "ccherney"; // Your UserID here
-    const char *SERVER = "marmoset04.shoshin.uwaterloo.ca";
-    const char *DBNAME = "db356_ccherney"; // Can specify a database; don't want to
+    const char *USERID = "i6wu"; // Your UserID here
+    const char *SERVER = "marmoset02.shoshin.uwaterloo.ca";
+    const char *DBNAME = "db356_i6wu"; // Can specify a database; don't want to
 
     MYSQL mysql;            // Space for handler
     MYSQL *pMysql = &mysql; // Pointer to handler
@@ -144,10 +144,10 @@ int main(const int argc, const char *argv[])
             numFields = mysql_field_count(pMysql); // And get the field count
             if (!pQueryResult)
             { // We got nothing back; that may be OK
-                cout << "!pQueryResult" << endl;
                 if (numFields == 0)
                 { // We should have nothing back!
-                    cerr << argv[0] << ": Information: Query \"" << query << "\" returned zero rows" << endl;
+                    cout << ": Information: Query \"" << query << "\" returned zero rows" << endl;
+                    cout << "Success!" <<endl;
                 }
                 else
                 {
@@ -465,11 +465,18 @@ string make_query(int count)
 string add_query()
 {
     string return_value = "INSERT INTO Accident(stateCase) VALUES (";
-    string input;
+    string input, hold;
 
     cout << "What is the state case number: " << endl;
     getline(cin, input);
     return_value.append(input);
+    return_value.append("); ");
+    cout << "What year did this occur: " << endl;
+    getline(cin, hold);
+    return_value.append("INSERT INTO Date(stateCase, year) VALUES (");
+    return_value.append(input);
+    return_value.append(", ");
+    return_value.append(hold);
     return_value.append(");");
 
     return return_value;
