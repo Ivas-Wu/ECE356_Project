@@ -26,7 +26,11 @@ int main(const int argc, const char *argv[])
     MYSQL_RES *pQueryResult; // Pointer to query result handler
     MYSQL_ROW row;           // Space for result row
     int numFields;           // Number of fields in query
+    const char *passwd = getpass("Password: ");
 
+    bool exit = false;
+    while (!exit)
+    {
     // Attempt DB connection
     // Get a handler first
 
@@ -37,7 +41,6 @@ int main(const int argc, const char *argv[])
     }
 
     // Prompt for a password and connect (use default port 3306)
-    const char *passwd = getpass("Password: ");
     if (!mysql_real_connect(pMysql,
                             SERVER,
                             USERID,
@@ -51,11 +54,7 @@ int main(const int argc, const char *argv[])
         return -1;
     }
 
-    bool exit = false;
-    // Now we need to do the query.  The specific query depends on the options or
-    // lack of options.
-    while (!exit)
-    {
+    
         string input;
         string query = "";
         bool good_query = true;
