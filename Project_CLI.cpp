@@ -199,14 +199,14 @@ string make_query(int count)
         return "error";
     }
 
-    int input = 0;
+    string input = 0;
     bool loop = true;
     string hold;
     while (loop)
     {
-        cout << "Type a valid command, or type '0' for a list of commands: " << endl;
+        cout << "Type a valid command, or type 'help' for a list of commands: " << endl;
         getline(cin, input);
-        if (input == 0)
+        if (input == "help")
         {
             cout << "-1 : exit" << endl
                  << "1 : case, state" << endl
@@ -225,11 +225,11 @@ string make_query(int count)
             loop = false;
         }
     }
-    if (input == -1) // exit
+    if (input == "-1") // exit
     {
         return_value = "exit";
     }
-    else if (input == 1) // Case, State
+    else if (input == "1") // Case, State
     {
         cout << "Enter a case number: " << endl;
         getline(cin, hold);
@@ -240,9 +240,9 @@ string make_query(int count)
         return_value.append("AND WHERE state = ");
         return_value.append(hold);
     }
-    else if (input == 2) // Date
+    else if (input == "2") // Date
     {
-        return_value.append("INNER JOIN Date USING(state, case) ";
+        return_value.append("INNER JOIN Date USING(state, case) ");
         loop = true;
         while (loop)
         {
@@ -273,14 +273,14 @@ string make_query(int count)
             return_value.append(hold);
         }
     }
-    else if (input == 3) // Location
+    else if (input == "3") // Location
     {
         cout << "Enter a state: " << endl;
         getline(cin, hold);
         return_value.append("WHERE state = ");
         return_value.append(hold);
     }
-    else if (input == 4) // Persons count
+    else if (input == "4") // Persons count
     {
         loop = true;
         while (loop)
@@ -316,9 +316,9 @@ string make_query(int count)
             return_value.append(hold);
         }
     }
-    else if (input == 5) // Speed Limit
+    else if (input == "5") // Speed Limit
     {
-        return_value.append("INNER JOIN Vehicle USING(state, case) ";
+        return_value.append("INNER JOIN Vehicle USING(state, case) ");
         loop = true;
         while (loop)
         {
@@ -349,7 +349,7 @@ string make_query(int count)
             return_value.append(hold);
         }
     }
-    else if (input == 6) // Drunk Driver
+    else if (input == "6") // Drunk Driver
     {
         loop = true;
         while (loop)
@@ -385,9 +385,9 @@ string make_query(int count)
             return_value.append(hold);
         }
     }
-    else if (input == 7) // Roll Over
+    else if (input == "7") // Roll Over
     {
-        return_value.append("INNER JOIN Vehicle USING(state, case) WHERE rollover = ";
+        return_value.append("INNER JOIN Vehicle USING(state, case) WHERE rollover = ");
         cout << "Rollover (y/n): " << endl;
         getline(cin, hold);
         if (hold == "y") {
@@ -397,9 +397,9 @@ string make_query(int count)
             return_value.append("0");
         }
     }
-    else if (input == 8) // Hit and Run
+    else if (input == "8") // Hit and Run
     {
-        return_value.append("INNER JOIN Vehicle USING(state, case) WHERE hitAndRun = ";
+        return_value.append("INNER JOIN Vehicle USING(state, case) WHERE hitAndRun = ");
         cout << "Hit and run (y/n): " << endl;
         getline(cin, hold);
         if (hold == "y") {
@@ -409,14 +409,14 @@ string make_query(int count)
             return_value.append("0");
         }
     }
-    else if (input == 9) // Weather
+    else if (input == "9") // Weather
     {
         cout << "Enter weather condition: " << endl;
         getline(cin, hold);
         return_value.append("WHERE weather = ");
         return_value.append(hold);
     }
-    else if (input == 10) // Death Count
+    else if (input == "10") // Death Count
     {
         loop = true;
         while (loop)
