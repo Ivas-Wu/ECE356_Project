@@ -450,7 +450,7 @@ LINES TERMINATED BY '\n' IGNORE 1 LINES
 @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy,
 @dummy, @dummy, @dummy);
 
---Same process as done on Make, weather etc but this time on sex, number goes to Male, Female or Unknown
+-- Same process as done on Make, weather etc but this time on sex, number goes to Male, Female or Unknown
 Update NonMotorist INNER JOIN Gender ON NonMotorist.sexEnum = Gender.genderID SET NonMotorist.sex = Gender.genderDesc;
 ALTER TABLE NonMotorist DROP COLUMN sexEnum;
 DROP TABLE Gender;
